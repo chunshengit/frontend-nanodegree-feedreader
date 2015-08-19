@@ -27,34 +27,34 @@ $(function() {
         });
 
 
-        /* TODO: Write a test that loops through each feed
+        /* This test case loops through each feed
          * in the allFeeds object and ensures it has a URL defined
          * and that the URL is not empty.
          */
-         it('Each feed has URL defined and not empty', function () {
+        it('Each feed has URL defined and not empty', function () {
             allFeeds.forEach(function(f) {
                 expect(f.url).toBeDefined();
-                expect(f.url).not.toBe(null);
+                expect(f.url.length).not.toBe(0);
             });
-         });
+        });
 
-        /* TODO: Write a test that loops through each feed
+        /* This test case loops through each feed
          * in the allFeeds object and ensures it has a name defined
          * and that the name is not empty.
          */
         it('Each feed has name defined and not empty', function () {
             allFeeds.forEach(function(f) {
                 expect(f.name).toBeDefined();
-                expect(f.name).not.toBe(null);
+                expect(f.name.length).not.toBe(0);
             });
-         });
+        });
     });
 
 
-    /* TODO: Write a new test suite named "The menu" */
+    /* Test suite named "The menu" */
     describe('The menu Checking DOM only', function() {
 
-        /* TODO: Write a test that ensures the menu element is
+        /* This test case ensures the menu element is
          * hidden by default. You'll have to analyze the HTML and
          * the CSS to determine how we're performing the
          * hiding/showing of the menu element.
@@ -66,10 +66,10 @@ $(function() {
          * with class menu-hidden. If so, the applied style hides the menu.
          */
         it('Menu is hidden by default', function () {
-            expect($('.menu.hidden').closest('.menu-hidden')).toBeInDOM();
-         });
+            expect($('.menu.hidden').parents().hasClass('menu-hidden')).toBe(true);
+        });
 
-         /* TODO: Write a test that ensures the menu changes
+         /* This test case ensures the menu changes
           * visibility when the menu icon is clicked. This test
           * should have two expectations: does the menu display when
           * clicked and does it hide when clicked again.
@@ -82,12 +82,11 @@ $(function() {
             spyEvent = spyOnEvent('.menu-icon-link', 'click');
             $('.menu-icon-link').click();
             expect(spyEvent).toHaveBeenTriggered();
-            expect($('.menu.hidden').closest('.menu-hidden')).not.toBeInDOM();
+            expect($('.menu.hidden').parents().hasClass('menu-hidden')).toBe(false);
             $('.menu-icon-link').trigger("click");
             expect(spyEvent).toHaveBeenTriggered();
-            expect($('.menu.hidden').closest('.menu-hidden')).toBeInDOM();
-         });
-
+            expect($('.menu.hidden').parents().hasClass('menu-hidden')).toBe(true);
+        });
     });
 
     /*
@@ -110,9 +109,9 @@ $(function() {
              * menu is not hidden.
              */
             expect($('.menu.hidden').css('transform')).toEqual("matrix(1, 0, 0, 1, -192, 0)");
-         });
+        });
 
-         /* TODO: Write a test that ensures the menu changes
+         /* This test case ensures the menu changes
           * visibility when the menu icon is clicked. This test
           * should have two expectations: does the menu display when
           * clicked and does it hide when clicked again.
@@ -140,9 +139,9 @@ $(function() {
 
     });
 
-    /* TODO: Write a new test suite named "Initial Entries" */
+    /* Test suite named "Initial Entries" */
     describe('Initial Entries', function() {
-        /* TODO: Write a test that ensures when the loadFeed
+        /* This test case ensures when the loadFeed
          * function is called and completes its work, there is at least
          * a single .entry element within the .feed container.
          * Remember, loadFeed() is asynchronous so this test wil require
@@ -157,25 +156,29 @@ $(function() {
                 beforeEach(function(done) {
                     loadFeed(id);
                     setTimeout(function(){
+                        /*
+                         * If I take the done() out of this setTimeout block, I get failure on next test suite: " New Feed Selection".
+                         * There seems to be some intereference on the variable initiation.
+                         */
                         done();
                     }, 1000);
                 });
 
                 it('there is at least a single .entry element within the .feed container after ' + allFeeds[id].name + ' loaded.', function () {
-                    expect($('.feed').find('.entry')).not.toBeNull();
+                    expect($('.feed .entry').length).not.toBe(0);
                 });
             });
         }
 
         for(var i = 0 ; i < allFeeds.length; i++) {
             testId(i);
-        }
+        } // jshint suggests no semicolon here
 
     });
 
-    /* TODO: Write a new test suite named "New Feed Selection" */
+    /* Test suite named "New Feed Selection" */
     describe('New Feed Selection', function() {
-        /* TODO: Write a test that ensures when a new feed is loaded
+        /* This test case ensures when a new feed is loaded
          * by the loadFeed function that the content actually changes.
          * Remember, loadFeed() is asynchronous.
          */
@@ -195,7 +198,7 @@ $(function() {
                     var len = content.length;
                     for(var j = 0; j < len; j++) {
                             contentChange = contentChange && (content[j] != currentFeedContent);
-                    };
+                    }
                     content.push($('.feed').html());
                     expect(contentChange).toBe(true);
                 });
@@ -204,7 +207,7 @@ $(function() {
 
         for(var i = 0 ; i < allFeeds.length; i++) {
             loadId(i);
-        }
-    })
+        } // jshint suggests no semicolon here
+    }); //Jshint actually suggests I have semicolon here
 
 }());
